@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: rodviks-db
+    environment:
+      POSTGRES_USER: rodviks
+      POSTGRES_PASSWORD: rodviks
+      POSTGRES_DB: rodviks
+    ports:
+      - "5432:5432"
+    volumes:
+      - rodviks_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rodviks"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: rodviks-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://rodviks:rodviks@db:5432/rodviks?schema=public
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/uploads
+
+volumes:
+  rodviks_pgdata:
+  uploads:
