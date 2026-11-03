@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './env';
 import { authRouter } from './routes/auth';
+import { phoneAuthRouter } from './routes/phoneAuth';
 import { usersRouter } from './routes/users';
 import { chatsRouter } from './routes/chats';
 import { uploadsRouter } from './routes/uploads';
@@ -18,6 +19,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/uploads', express.static('uploads'));
 
 app.use('/auth', authRouter);
+app.use('/auth/phone', phoneAuthRouter);
 app.use('/users', apiLimiter, usersRouter);
 app.use('/chats', apiLimiter, chatsRouter);
 app.use('/media', apiLimiter, uploadsRouter);

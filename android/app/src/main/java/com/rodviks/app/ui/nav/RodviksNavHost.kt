@@ -15,16 +15,13 @@ import com.rodviks.app.MainActivity
 import com.rodviks.app.di.ServiceLocator
 import com.rodviks.app.ui.screens.ChatScreen
 import com.rodviks.app.ui.screens.ChatsScreen
-import com.rodviks.app.ui.screens.LoginScreen
+import com.rodviks.app.ui.screens.PhoneAuthScreen
 import com.rodviks.app.ui.screens.ProfileScreen
-import com.rodviks.app.ui.screens.RegisterScreen
 import com.rodviks.app.ui.screens.SearchScreen
 import com.rodviks.app.ui.screens.SettingsScreen
 import com.rodviks.app.ui.screens.SplashScreen
 import com.rodviks.app.viewmodel.ChatViewModel
-import com.rodviks.app.viewmodel.LoginViewModel
 import com.rodviks.app.viewmodel.ProfileViewModel
-import com.rodviks.app.viewmodel.RegisterViewModel
 import com.rodviks.app.viewmodel.SearchViewModel
 import com.rodviks.app.viewmodel.SettingsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +30,6 @@ import kotlinx.coroutines.launch
 object Routes {
     const val SPLASH = "splash"
     const val LOGIN = "login"
-    const val REGISTER = "register"
     const val CHATS = "chats"
     const val CHAT = "chat/{chatId}"
     const val SEARCH = "search"
@@ -89,28 +85,14 @@ fun RodviksNavHost(
         }
 
         composable(Routes.LOGIN) {
-            val loginViewModel: LoginViewModel = viewModel()
-            LoginScreen(
-                viewModel = loginViewModel,
-                onLoggedIn = {
+            val phoneAuthViewModel: com.rodviks.app.viewmodel.PhoneAuthViewModel = viewModel()
+            PhoneAuthScreen(
+                viewModel = phoneAuthViewModel,
+                onAuthorized = {
                     navController.navigate(Routes.CHATS) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
-                },
-                onGoRegister = { navController.navigate(Routes.REGISTER) }
-            )
-        }
-
-        composable(Routes.REGISTER) {
-            val registerViewModel: RegisterViewModel = viewModel()
-            RegisterScreen(
-                viewModel = registerViewModel,
-                onRegistered = {
-                    navController.navigate(Routes.CHATS) {
-                        popUpTo(Routes.REGISTER) { inclusive = true }
-                    }
-                },
-                onGoLogin = { navController.popBackStack() }
+                }
             )
         }
 

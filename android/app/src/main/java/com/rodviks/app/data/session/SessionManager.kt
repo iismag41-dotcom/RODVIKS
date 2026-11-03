@@ -62,8 +62,8 @@ class SessionManager(private val context: Context) {
             url = "http://$url"
         }
         val hasPort = Regex(":[0-9]+$").containsMatchIn(url.substringAfter("://"))
-        if (!hasPort) {
-            url = if (url.startsWith("https://")) "$url:443" else "$url:3000"
+        if (!hasPort && !url.startsWith("https://")) {
+            url = "$url:3000"
         }
         return url
     }
@@ -80,6 +80,6 @@ class SessionManager(private val context: Context) {
     suspend fun currentBaseUrl(): String? = sessionFlow.first().baseUrl
 
     companion object {
-        const val DEFAULT_BASE_URL = "http://10.0.2.2:3000"
+        const val DEFAULT_BASE_URL = "https://rodviks.onrender.com"
     }
 }

@@ -54,7 +54,7 @@ object ServiceLocator {
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:3000/")
+                .baseUrl("https://rodviks.onrender.com/")
                 .client(okHttp)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()

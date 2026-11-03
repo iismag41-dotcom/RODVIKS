@@ -19,6 +19,15 @@ interface ApiService {
     @POST("auth/login")
     suspend fun login(@Body body: LoginBody): Response<AuthResponse>
 
+    @POST("auth/phone/register")
+    suspend fun phoneRegister(@Body body: PhoneRegisterBody): Response<PhoneAuthResponse>
+
+    @POST("auth/phone/login")
+    suspend fun phoneLogin(@Body body: PhoneLoginBody): Response<PhoneAuthResponse>
+
+    @POST("auth/phone/username")
+    suspend fun setPhoneUsername(@Body body: SetUsernameBody): Response<User>
+
     @GET("users/me")
     suspend fun getMe(): Response<User>
 
@@ -63,4 +72,25 @@ interface ApiService {
 data class LoginBody(
     val username: String,
     val password: String
+)
+
+data class PhoneRegisterBody(
+    val phone: String,
+    val password: String
+)
+
+data class PhoneLoginBody(
+    val phone: String,
+    val password: String
+)
+
+data class PhoneAuthResponse(
+    val token: String,
+    val user: User,
+    val needsUsername: Boolean = false
+)
+
+data class SetUsernameBody(
+    val username: String,
+    val displayName: String? = null
 )

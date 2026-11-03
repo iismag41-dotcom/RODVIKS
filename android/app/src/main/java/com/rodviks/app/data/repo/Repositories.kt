@@ -8,6 +8,9 @@ import com.rodviks.app.data.api.Chat
 import com.rodviks.app.data.api.CreateChatRequest
 import com.rodviks.app.data.api.LoginBody
 import com.rodviks.app.data.api.Message
+import com.rodviks.app.data.api.PhoneLoginBody
+import com.rodviks.app.data.api.PhoneRegisterBody
+import com.rodviks.app.data.api.SetUsernameBody
 import com.rodviks.app.data.api.UpdateUserRequest
 import com.rodviks.app.data.api.User
 import com.rodviks.app.data.local.AppDatabase
@@ -85,7 +88,63 @@ class AuthRepository(
         400 -> "Некорректные данные"
         else -> "Ошибка сервера ($code)"
     }
+
+    // ---- Phone + password auth ----
+
+    /** Register with phone and password; on success saves the session. */
+    suspend fun phoneRegister(phone: String, password: String): PhoneAuthResult {
+        return try {
+            val resp = api.phoneRegister(PhoneRegisterBody(phone, password))
+            val body = resp.body()
+            if (resp.isSuccessful && body != null) {
+                sessionManager.saveAuth(body.token, body.user.id)
+                PhoneAuthResult(user = body.user, needsUsername = body.needsUsername)
+            } else {
+                PhoneAuthResult(error = httpMessage(resp.code()))
+            }
+        } catch (e: Exception) {
+            PhoneAuthResult(error = e.toUserMessage())
+        }
+    }
+
+    /** Login with phone and password; on success saves the session. */
+    suspend fun phoneLogin(phone: String, password: String): PhoneAuthResult {
+        return try {
+            val resp = api.phoneLogin(PhoneLoginBody(phone, password))
+            val body = resp.body()
+            if (resp.isSuccessful && body != null) {
+                sessionManager.saveAuth(body.token, body.user.id)
+                PhoneAuthResult(user = body.user, needsUsername = body.needsUsername)
+            } else {
+                PhoneAuthResult(error = httpMessage(resp.code()))
+            }
+        } catch (e: Exception) {
+            PhoneAuthResult(error = e.toUserMessage())
+        }
+    }
+
+    /** Sets the username after first phone login (requires saved session). */
+    suspend fun setPhoneUsername(username: String, displayName: String?): ApiResult<User> {
+        return try {
+            val resp = api.setPhoneUsername(
+                SetUsernameBody(username.trim().lowercase(), displayName?.trim()?.ifBlank { null })
+            )
+            if (resp.isSuccessful && resp.body() != null) {
+                success(resp.body()!!)
+            } else {
+                failure(httpMessage(resp.code()))
+            }
+        } catch (e: Exception) {
+            failure(e.toUserMessage())
+        }
+    }
 }
+
+data class PhoneAuthResult(
+    val user: User? = null,
+    val needsUsername: Boolean = false,
+    val error: String? = null
+)
 
 class UserRepository(
     private val api: ApiService,

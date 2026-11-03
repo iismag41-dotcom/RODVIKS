@@ -18,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -96,53 +95,6 @@ fun SettingsScreen(
                         viewModel.onDarkThemeChange(checked)
                         onThemeChange(checked)
                     }
-                )
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            // Server address
-            Text(
-                "Адрес сервера",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                "Например, http://10.0.2.2:3000 (эмулятор) или адрес вашего ПК",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = state.serverUrl,
-                onValueChange = viewModel::onServerUrlChange,
-                singleLine = true,
-                shape = RoundedCornerShape(14.dp),
-                placeholder = { Text("http://10.0.2.2:3000") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(8.dp))
-            Button(
-                onClick = viewModel::saveServerUrl,
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Сохранить адрес")
-            }
-
-            state.savedMessage?.let { msg ->
-                LaunchedEffect(msg) {
-                    kotlinx.coroutines.delay(2500)
-                    viewModel.consumeSavedMessage()
-                }
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    msg,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
                 )
             }
 

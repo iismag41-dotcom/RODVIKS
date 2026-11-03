@@ -84,7 +84,7 @@ fun Avatar(
 /** Resolves a possibly relative /uploads/... URL against the current base URL. */
 fun fullUrl(url: String): String {
     if (url.startsWith("http://") || url.startsWith("https://")) return url
-    val base = (currentBaseUrlOverride ?: "http://10.0.2.2:3000").trimEnd('/')
+    val base = (currentBaseUrlOverride ?: "https://rodviks.onrender.com").trimEnd('/')
     return if (url.startsWith("/")) "$base$url" else "$base/$url"
 }
 

@@ -100,7 +100,7 @@ fun LoginScreen(
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             shape = RoundedCornerShape(14.dp),
-            placeholder = { Text("http://192.168.101.12:3000") },
+            placeholder = { Text("https://rodviks.onrender.com") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
@@ -220,7 +220,7 @@ fun RegisterScreen(
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
             shape = RoundedCornerShape(14.dp),
-            placeholder = { Text("http://192.168.101.12:3000") },
+            placeholder = { Text("https://rodviks.onrender.com") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
